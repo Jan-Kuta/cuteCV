@@ -1,0 +1,64 @@
+type User {
+  _id: ID! @id
+  username: String @unique
+  confirmed: Boolean
+  blocked: Boolean
+  displayName: String
+  password: String
+  localProvider: Boolean
+  facebookProvider: Boolean
+  twitterProvider: Boolean
+  googleProvider: Boolean
+  userInfo: UserInfo @relation(link: INLINE, name: "UserInfoToUser", onDelete: SET_NULL)
+  skills: [Skill!] @relation(link: INLINE, name: "SkillToUser", onDelete: CASCADE)
+  schools: [Education!] @relation(link: INLINE, name: "EducationToUser", onDelete: CASCADE)
+  jobs: [Work!] @relation(link: INLINE, name: "WorkToUser", onDelete: CASCADE)
+}
+
+type UserInfo {
+  _id: ID! @id
+  firstname: String
+  lastname: String
+  image: String
+  birthdate: String
+  email: String
+  phone: String
+  drivingLicence: String
+  address: String
+  linkedinAccount: String
+  webpage: String
+  user: User @relation(name: "UserInfoToUser", onDelete: SET_NULL)
+}
+
+type Skill {
+  _id: ID! @id
+  title: String
+  level: Int
+  note: String
+  user: User @relation(name: "SkillToUser", onDelete: SET_NULL)
+}
+
+type Education {
+  _id: ID! @id
+  startDate: String
+  endDate: String
+  schoolName:String
+  faculty: String
+  major: String
+  degree: String
+  thesis:String
+  user: User @relation(name: "EducationToUser", onDelete: SET_NULL)
+}
+
+type Work {
+  _id: ID! @id
+  startDate: String
+  endDate: String
+  company: String
+  position: String
+  type: String
+  address: String
+  webpage: String
+  notes: String
+  user: User @relation(name: "WorkToUser", onDelete: SET_NULL)
+}

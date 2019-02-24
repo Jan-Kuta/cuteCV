@@ -1,0 +1,22 @@
+# import User, UserInfo, Skill, Education, Work from './generated/prisma.graphql'
+
+type Query {
+    me: User
+    userInfo(_id: ID!): UserInfo
+}
+
+type Mutation {
+    createUserInfo(
+        username: String,
+        firstname: String,
+        lastname: String,
+        image: String,
+        birthdate: String,
+        email: String,
+        phone: String,
+        drivingLicence: String,
+        address: String,
+        linkedinAccount: String,
+        webpage: String
+    ): UserInfo
+}
