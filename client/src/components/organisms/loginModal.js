@@ -3,7 +3,8 @@ import Modal from '../atoms/modal';
 import FacebookLoginButton from '../atoms/facebookLoginBtn';
 import TwitterLoginButton from '../atoms/twitterLoginBtn';
 import GoogleLoginButton from '../atoms/googleLoginBtn';
-import Context from '../../context';
+import Context from '../../context/userContext';
+import userActions from '../../actionType/userActions';
 
 const LoginModal = (props) => {
     const [email, setEmail] = useState("");
@@ -39,7 +40,7 @@ const LoginModal = (props) => {
         }
         res = await res.json();
         console.log("user: ", res);
-        dispatch({type: 'LOGIN_USER', payload: res});
+        dispatch({type: userActions.LOGIN_USER, payload: res});
         onSuccess();
     }    
 

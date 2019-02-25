@@ -1,18 +1,22 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Context from '../../context';
+import Context from '../../context/userContext';
+import userActions from '../../actionType/userActions';
+import io from 'socket.io-client';
 
 const SocialLoginButton = (props) => {
     const [disabled, setDisabled] = useState('');
     const [popupOpened, setPopupOpened] = useState(false);
     const [popup, setPopup] = useState(null);
-    const { socket, provider, onSuccess, apiUrl, className, children } = props;
+    const { provider, onSuccess, className, children } = props;
     const { dispatch } = useContext(Context);
+    const apiUrl = process.env.REACT_APP_API_URL; 
+    const socket = io(apiUrl);
         
     useEffect(() => {
         socket.on(provider, user => {
             setPopupOpened(false);
-            dispatch({type: 'LOGIN_USER', payload: user});
+            dispatch({type: userActions.LOGIN_USER, payload: user});
             onSuccess();
         });
     }, []);
@@ -58,8 +62,6 @@ const SocialLoginButton = (props) => {
 
 SocialLoginButton.propTypes = {
     provider: PropTypes.string.isRequired,
-    socket: PropTypes.object.isRequired,
-    apiUrl: PropTypes.string.isRequired,
     onSuccess: PropTypes.func
 }
 

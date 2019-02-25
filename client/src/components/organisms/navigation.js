@@ -4,9 +4,9 @@ import { useQuery } from 'react-apollo-hooks';
 import LoginModal from './loginModal';
 import RegisterModal from './registerModal';
 import ForgotPasswordModal from './forgotPassword';
-import Context from '../../context';
-import { MeQuery } from '../../queries';
-
+import Context from '../../context/userContext';
+import { MeQuery } from '../../query/userQueries';
+import userActions from '../../actionType/userActions';
 const Navigation = (props) => {
     const getUserName = (user) => (
         user ? user.displayName : 'UNKNOWN'
@@ -21,11 +21,11 @@ const Navigation = (props) => {
     let loggedUser = getUserName(user);
     
     useEffect(()=>{
-        dispatch({type: 'LOGIN_USER', payload: data.me});
+        dispatch({type: userActions.LOGIN_USER, payload: data.me});
     }, [data.me && data.me._id]);
     
     const logout = async () => {
-        dispatch({type: 'LOGOUT_USER', payload: null});
+        dispatch({type: userActions.LOGOUT_USER, payload: null});
         const res = await fetch(`${process.env.REACT_APP_API_URL}/logout`, {
             method: 'GET',
             credentials: 'include'

@@ -1,12 +1,14 @@
+import userActions from '../actionType/userActions';
+
 export default (state, action) => {
     switch(action.type) {
-        case 'LOGIN_USER': 
+        case userActions.LOGIN_USER: 
             return {
                 ...state,
                 user: action.payload
             };
             break;
-        case 'LOGOUT_USER': 
+        case userActions.LOGOUT_USER: 
             return {
                 ...state,
                 user: null
