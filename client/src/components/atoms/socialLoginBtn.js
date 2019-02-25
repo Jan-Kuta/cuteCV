@@ -8,10 +8,10 @@ const SocialLoginButton = (props) => {
     const [disabled, setDisabled] = useState('');
     const [popupOpened, setPopupOpened] = useState(false);
     const [popup, setPopup] = useState(null);
-    const { provider, onSuccess, className, children } = props;
+    const [apiUrl] = useState(process.env.REACT_APP_API_URL);
+    const [socket] = useState(io(apiUrl));
     const { dispatch } = useContext(Context);
-    const apiUrl = process.env.REACT_APP_API_URL; 
-    const socket = io(apiUrl);
+    const { provider, onSuccess, className, children } = props;
         
     useEffect(() => {
         socket.on(provider, user => {
