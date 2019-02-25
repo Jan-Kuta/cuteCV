@@ -1,4 +1,4 @@
-import React from 'reactn';
+import React from 'react';
 
 const Modal = (props) => ( 
     <div className="w3-modal" style={{display: props.opened ? "block" : "none" }}>

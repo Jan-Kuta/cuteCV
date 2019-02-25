@@ -1,17 +1,8 @@
-import React, { setGlobal, addCallback } from 'reactn';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-
-/*addCallback(global => {
-    alert(`User: ${global.user}`);
-    return null;
-});*/
-
-setGlobal({
-    user: null
-});
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

@@ -1,15 +1,12 @@
-import React, { useGlobal } from 'reactn';
+import React, { useContext } from 'react';
+import Context from '../../context';
 
 const WelcomePage = (props) => {
-    const { users } = props;
-    const [ user, setUser ] = useGlobal('user');
+    const { state: { user } } = useContext(Context);
     
     return (
         <React.Fragment>
             <h1>Welcome {user? user.displayName : null}</h1>
-            {users && users.map((user, index) => (
-                <h4 key={index}>{`${user.email}: ${user.username}`}</h4>
-            ))}
             {JSON.stringify(user)}
         </React.Fragment>
     );

@@ -1,56 +1,32 @@
-import React, { Component } from 'reactn';
-import PropTypes from 'prop-types';;
+import React, { useContext, useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import Context from '../../context';
 
-class SocialLoginButton extends Component {
-    constructor(props) {
-        super(props);
-
-        this.checkPopup = this.checkPopup.bind(this);
-        this.openPopup = this.openPopup.bind(this);
-        this.startAuth = this.startAuth.bind(this);
-
-        this.state = { disabled: false };
-        this.setGlobal({ user: null });
-
-    }
-    componentDidMount() {
-        const {
-            socket,
-            provider,
-            onSuccess
-        } = this.props
-
+const SocialLoginButton = (props) => {
+    const [disabled, setDisabled] = useState('');
+    const { socket, provider, onSuccess, apiUrl, className, children } = props;
+    const { dispatch } = useContext(Context);
+        
+    useEffect(() => {
         socket.on(provider, user => {
-            const { popup } = this;
-
-            console.log(popup);
+            //console.log(popup);
             console.log('user', user)
-            popup && popup.close();
-            this.setGlobal({
-                user
-            });
+            //popup && popup.close();
+            dispatch({type: 'LOGIN_USER', payload: user});
             onSuccess();
-        })
-    }
+        });
+    }, []);
 
-    checkPopup() {
+    const checkPopup = (popup) => {
         const check = setInterval(() => {
-            const { popup } = this;
             if (!popup || popup.closed || popup.closed === undefined) {
                 clearInterval(check)
-                this.setState({
-                    disabled: ''
-                })
+                setDisabled('');
             }
         }, 1000)
-    }
+    };
 
-    openPopup() {
-        const {
-            provider,
-            socket,
-            apiUrl
-        } = this.props
+    const openPopup = () => {
         const width = 600,
             height = 600
         const left = (window.innerWidth / 2) - (width / 2)
@@ -64,33 +40,23 @@ class SocialLoginButton extends Component {
         )
     }
 
-    startAuth = () => {
-        if (!this.state.disabled) {
-            this.popup = this.openPopup()
-            console.log(this.popup);
-            this.checkPopup()
-            this.setState({
-                disabled: 'disabled'
-            })
+    const startAuth = async () => {
+        if (!disabled) {
+            const myPopup = openPopup();
+            console.log("popup: ", myPopup);
+            checkPopup(myPopup)
+            setDisabled('disabled')
         }
     }
 
-    render() {
-        const { disabled } = this.state;
-        const {
-            className,
-            children
-        } = this.props;
-
-        return ( 
-            <a
-                className = {`w3-button w3-round w3-section${disabled ? ' w3-disabled' : ''}${className ? ' ' + className : ''}`}
-                onClick = {this.startAuth}
-            >
-                {children}
-            </a>
-        );
-    }
+    return ( 
+        <a
+            className = {`w3-button w3-round w3-section${disabled ? ' w3-disabled' : ''}${className ? ' ' + className : ''}`}
+            onClick = {startAuth}
+        >
+            {children}
+        </a>
+    );
 }
 
 SocialLoginButton.propTypes = {

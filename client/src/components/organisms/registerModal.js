@@ -1,4 +1,4 @@
-import React, { useState } from 'reactn';
+import React, { useState } from 'react';
 import Modal from '../atoms/modal';
 import FacebookLoginButton from '../atoms/facebookLoginBtn';
 import TwitterLoginButton from '../atoms/twitterLoginBtn';

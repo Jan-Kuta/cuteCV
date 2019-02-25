@@ -1,13 +1,14 @@
-import React, { useState, useGlobal } from 'reactn';
+import React, { useState, useContext } from 'react';
 import Modal from '../atoms/modal';
 import FacebookLoginButton from '../atoms/facebookLoginBtn';
 import TwitterLoginButton from '../atoms/twitterLoginBtn';
 import GoogleLoginButton from '../atoms/googleLoginBtn';
+import Context from '../../context';
 
 const LoginModal = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [user, setUser] = useGlobal('user');
+    const { state: { user }, dispatch } = useContext(Context);
     const { onClose, opened, onRegisterClick, onForgotPasswordClick, onSuccess } = props;
 
     const handleChangeEmail = (e) => {
@@ -38,7 +39,7 @@ const LoginModal = (props) => {
         }
         res = await res.json();
         console.log("user: ", res);
-        setUser(res);
+        dispatch({type: 'LOGIN_USER', payload: res});
         onSuccess();
     }    
 

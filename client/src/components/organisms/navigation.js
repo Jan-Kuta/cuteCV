@@ -1,29 +1,31 @@
-import React, { useState, useGlobal } from 'reactn';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { useQuery } from 'react-apollo-hooks';
 import LoginModal from './loginModal';
 import RegisterModal from './registerModal';
 import ForgotPasswordModal from './forgotPassword';
+import Context from '../../context';
 import { MeQuery } from '../../queries';
 
 const Navigation = (props) => {
     const getUserName = (user) => (
-        user.displayName
+        user ? user.displayName : 'UNKNOWN'
     );
 
     const { data } = useQuery(MeQuery);
     const [loginModalOpened, setLoginModalOpened] = useState(false);
     const [registerModalOpened, setRegisterModalOpened] = useState(false);
     const [forgotPasswordModalOpened, setForgotPasswordModalOpened] = useState(false);
-    const [user, setUser] = useGlobal('user');
-    const isAuthenticated = !!user;
-    const loggedUser = isAuthenticated ? getUserName(user) : 'UNKNOWN';
+    const { state: { user }, dispatch } = useContext(Context);
+    let isAuthenticated = !!user;
+    let loggedUser = getUserName(user);
     
-    if (data.me && data.me.username !== (user ? user.username : null)) {
-        setUser(data.me);
-    }
+    useEffect(()=>{
+        dispatch({type: 'LOGIN_USER', payload: data.me});
+    }, [data.me && data.me._id]);
+    
     const logout = async () => {
-        setUser(null);
+        dispatch({type: 'LOGOUT_USER', payload: null});
         const res = await fetch(`${process.env.REACT_APP_API_URL}/logout`, {
             method: 'GET',
             credentials: 'include'

@@ -1,4 +1,4 @@
-import React from 'reactn';
+import React from 'react';
 import Modal from '../atoms/modal';
 
 const ForgotPasswordModal = (props) => (

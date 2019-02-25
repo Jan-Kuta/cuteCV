@@ -48,7 +48,7 @@ app.get('/', (req, res) => {
 
 app.get('/logout', (req, res) => {
   req.logout();
-  res.redirect('/');
+  return res.json({ message: 'Logged out succesfully' });
 })
 
 schema.applyMiddleware({app, cors: {origin: CLIENT_ORIGIN}})
