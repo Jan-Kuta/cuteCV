@@ -18,27 +18,48 @@ module.exports = () => {
   passport.deserializeUser((obj, cb) => cb(null, obj))
   
   // Saves user to the database if not exists
-  const saveUserIfNotExists = async (user) => {
+  const getUserOrCreate = async (user, cb) => {
     let dbUser = await prisma.query.user({where: {username: user.username}}, `
       {
         _id
         username
-        confirmed
+        displayName
+        photoUrl
         blocked
         ${user.provider}Provider
       }`);
-    if (dbUser) {
-      if (dbUser.blocked) {
-        throw new Error("User Account Blocked")
+      
+      if (dbUser) {
+        if (dbUser.blocked) {
+          return cb(new Error("User Account Blocked"), null);
+        }
+        
+        if (!dbUser[`${user.provider}Provider`]) {
+          // first login/registration by this provider -> update account
+          const gqlUpdate = {
+            data: {},
+            where: {
+              _id: dbUser._id,
+          }};
+          gqlUpdate.data[`${user.provider}Provider`] = true;
+          if (!dbUser.photoUrl) {
+            gqlUpdate.data.photoUrl = user.photoUrl
+          }
+          dbUser = await prisma.mutation.updateUser(gqlUpdate)
+        }
+      } else {
+        // new account created
+        const gqlCreate = {
+          data: {
+            username: user.username,
+            displayName: user.displayName,
+            photoUrl: user.photoUrl
+          }
+        }
+        gqlCreate.data[`${user.provider}Provider`] = true;
+        dbUser = await prisma.mutation.createUser(gqlCreate);
       }
-      /*if (!dbUser.confirmed) {
-        throw new Error("Email not confirmed yet")
-      }*/
-      // if (!dbUser[`${user.provider}Provider`]) {update} // TODO JKU
-    } else {
-      dbUser = await prisma.mutation.createUser({data: {username: user.username}});
-    }
-    return dbUser
+      return cb(null, userSerialize(dbUser));
   };
 
   // The callbacks that are invoked when an OAuth provider sends back user 
@@ -49,9 +70,8 @@ module.exports = () => {
       photoUrl: profile.photos[0].value.replace(/_normal/, ''),
       provider: 'twitter'
     };
-    const res = await saveUserIfNotExists(user);
-    console.log('save user: ', res);
-    return cb(null, user);
+
+    return getUserOrCreate(user, cb);
   };
 
   const googleCallback = async (accessToken, refreshToken, profile, cb) => {
@@ -61,9 +81,7 @@ module.exports = () => {
       photoUrl: profile.photos[0].value.replace(/sz=50/gi, 'sz=250'),
       provider: 'google'
     };
-    const res = await saveUserIfNotExists(user);
-    console.log('save user: ', res);
-    return cb(null, user);
+    return getUserOrCreate(user, cb);
   }
 
   const facebookCallback = async (accessToken, refreshToken, profile, cb) => {
@@ -73,9 +91,7 @@ module.exports = () => {
       photoUrl: profile.photos[0].value,
       provider: 'facebook'
     };
-    const res = await saveUserIfNotExists(user);
-    console.log('save user: ', res);
-    return cb(null, user);
+    return getUserOrCreate(user, cb);
   };
 
   // Adding each OAuth provider's strategy to passport

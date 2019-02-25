@@ -39,9 +39,9 @@ const localAuth = (req, res, strategy) => (passport.authenticate(
 
 // Routes that are triggered by the callbacks from each OAuth provider once 
 // the user has authenticated successfully
-router.get('/twitter/callback', twitterAuth, authController.controller)
-router.get('/google/callback', googleAuth, authController.controller)
-router.get('/facebook/callback', facebookAuth, authController.controller)
+router.get('/twitter/callback', twitterAuth, (req, res) => authController.controller(req, res, 'twitter'))
+router.get('/google/callback', googleAuth, (req,res) => authController.controller(req, res, 'google'))
+router.get('/facebook/callback', facebookAuth, (req,res) => authController.controller(req, res, 'facebook'))
 
 // This custom middleware allows us to attach the socket id to the session
 // With that socket id we can send back the right user info to the right 
