@@ -6,6 +6,7 @@ export const MeQuery = gql`
       _id
       username
       displayName
+      photoUrl
     }
   }
 `;

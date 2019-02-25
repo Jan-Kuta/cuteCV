@@ -1,5 +1,5 @@
 # source: http://localhost:4467
-# timestamp: Fri Feb 22 2019 19:18:35 GMT+0100 (Central European Standard Time)
+# timestamp: Mon Feb 25 2019 04:22:32 GMT+0100 (Central European Standard Time)
 
 type AggregateEducation {
   count: Int!
@@ -1431,6 +1431,7 @@ type Subscription {
 type User {
   _id: ID!
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -1457,6 +1458,7 @@ type UserConnection {
 
 input UserCreateInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -1493,6 +1495,7 @@ input UserCreateOneWithoutUserInfoInput {
 
 input UserCreateWithoutJobsInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -1508,6 +1511,7 @@ input UserCreateWithoutJobsInput {
 
 input UserCreateWithoutSchoolsInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -1523,6 +1527,7 @@ input UserCreateWithoutSchoolsInput {
 
 input UserCreateWithoutSkillsInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -1538,6 +1543,7 @@ input UserCreateWithoutSkillsInput {
 
 input UserCreateWithoutUserInfoInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -2207,6 +2213,8 @@ enum UserOrderByInput {
   _id_DESC
   username_ASC
   username_DESC
+  photoUrl_ASC
+  photoUrl_DESC
   confirmed_ASC
   confirmed_DESC
   blocked_ASC
@@ -2228,6 +2236,7 @@ enum UserOrderByInput {
 type UserPreviousValues {
   _id: ID!
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -2273,6 +2282,7 @@ input UserSubscriptionWhereInput {
 
 input UserUpdateInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -2289,6 +2299,7 @@ input UserUpdateInput {
 
 input UserUpdateManyMutationInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -2337,6 +2348,7 @@ input UserUpdateOneWithoutUserInfoInput {
 
 input UserUpdateWithoutJobsDataInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -2352,6 +2364,7 @@ input UserUpdateWithoutJobsDataInput {
 
 input UserUpdateWithoutSchoolsDataInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -2367,6 +2380,7 @@ input UserUpdateWithoutSchoolsDataInput {
 
 input UserUpdateWithoutSkillsDataInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -2382,6 +2396,7 @@ input UserUpdateWithoutSkillsDataInput {
 
 input UserUpdateWithoutUserInfoDataInput {
   username: String
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String
@@ -2498,6 +2513,46 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   username_not_ends_with: String
+  photoUrl: String
+
+  """All values that are not equal to given value."""
+  photoUrl_not: String
+
+  """All values that are contained in given list."""
+  photoUrl_in: [String!]
+
+  """All values that are not contained in given list."""
+  photoUrl_not_in: [String!]
+
+  """All values less than the given value."""
+  photoUrl_lt: String
+
+  """All values less than or equal the given value."""
+  photoUrl_lte: String
+
+  """All values greater than the given value."""
+  photoUrl_gt: String
+
+  """All values greater than or equal the given value."""
+  photoUrl_gte: String
+
+  """All values containing the given string."""
+  photoUrl_contains: String
+
+  """All values not containing the given string."""
+  photoUrl_not_contains: String
+
+  """All values starting with the given string."""
+  photoUrl_starts_with: String
+
+  """All values not starting with the given string."""
+  photoUrl_not_starts_with: String
+
+  """All values ending with the given string."""
+  photoUrl_ends_with: String
+
+  """All values not ending with the given string."""
+  photoUrl_not_ends_with: String
   confirmed: Boolean
 
   """All values that are not equal to given value."""

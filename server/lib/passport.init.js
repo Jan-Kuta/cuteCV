@@ -9,6 +9,7 @@ const {
 } = require('../config')
 const prisma = require('../prisma')
 const hashPassword = require('../utils/hashPassword')
+const userSerialize = require('../utils/userSerialize')
 
 module.exports = () => {  
 
@@ -45,7 +46,7 @@ module.exports = () => {
     const user = {
       displayName: profile.username,
       username: profile.emails && profile.emails[0].value,
-      photo: profile.photos[0].value.replace(/_normal/, ''),
+      photoUrl: profile.photos[0].value.replace(/_normal/, ''),
       provider: 'twitter'
     };
     const res = await saveUserIfNotExists(user);
@@ -57,7 +58,7 @@ module.exports = () => {
     const user = {
       displayName: profile.displayName,
       username: profile.emails[0].value,
-      photo: profile.photos[0].value.replace(/sz=50/gi, 'sz=250'),
+      photoUrl: profile.photos[0].value.replace(/sz=50/gi, 'sz=250'),
       provider: 'google'
     };
     const res = await saveUserIfNotExists(user);
@@ -69,7 +70,7 @@ module.exports = () => {
     const user = {
       displayName: `${profile.name.givenName} ${profile.name.familyName}`,
       username: profile.emails[0].value,
-      photo: profile.photos[0].value,
+      photoUrl: profile.photos[0].value,
       provider: 'facebook'
     };
     const res = await saveUserIfNotExists(user);
@@ -118,7 +119,7 @@ module.exports = () => {
         return done(new Error('Unable to login'), null,'Unable to login');
       }
     
-      return done(null, user)
+      return done(null, userSerialize(user));
     }) 
   )
 
@@ -174,7 +175,7 @@ module.exports = () => {
         });
       }
 
-      return done(null, result);
+      return done(null, userSerialize(result));
     }) 
   )
   

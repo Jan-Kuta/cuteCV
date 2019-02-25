@@ -1,6 +1,7 @@
 type User {
   _id: ID! @id
   username: String @unique
+  photoUrl: String
   confirmed: Boolean
   blocked: Boolean
   displayName: String

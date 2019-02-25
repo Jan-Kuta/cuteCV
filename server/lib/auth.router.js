@@ -17,6 +17,7 @@ const localAuth = (req, res, strategy) => (passport.authenticate(
       });
     }
   
+    // for registration do not login
     if(req.url.toLowerCase() === '/register'){
       if (res.finished) {
         return;
