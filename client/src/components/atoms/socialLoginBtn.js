@@ -4,27 +4,25 @@ import Context from '../../context';
 
 const SocialLoginButton = (props) => {
     const [disabled, setDisabled] = useState('');
+    const [popupOpened, setPopupOpened] = useState(false);
+    const [popup, setPopup] = useState(null);
     const { socket, provider, onSuccess, apiUrl, className, children } = props;
     const { dispatch } = useContext(Context);
         
     useEffect(() => {
         socket.on(provider, user => {
-            //console.log(popup);
-            console.log('user', user)
-            //popup && popup.close();
+            setPopupOpened(false);
             dispatch({type: 'LOGIN_USER', payload: user});
             onSuccess();
         });
     }, []);
 
-    const checkPopup = (popup) => {
-        const check = setInterval(() => {
-            if (!popup || popup.closed || popup.closed === undefined) {
-                clearInterval(check)
-                setDisabled('');
-            }
-        }, 1000)
-    };
+    useEffect(() => {
+        if (!popupOpened && popup) {
+            setDisabled('');
+            popup.close();
+        }
+    });
 
     const openPopup = () => {
         const width = 600,
@@ -42,9 +40,8 @@ const SocialLoginButton = (props) => {
 
     const startAuth = async () => {
         if (!disabled) {
-            const myPopup = openPopup();
-            console.log("popup: ", myPopup);
-            checkPopup(myPopup)
+            setPopup(openPopup());
+            setPopupOpened(true);
             setDisabled('disabled')
         }
     }
