@@ -9,11 +9,12 @@ const SocialLoginButton = (props) => {
     const [popupOpened, setPopupOpened] = useState(false);
     const [popup, setPopup] = useState(null);
     const [apiUrl] = useState(process.env.REACT_APP_API_URL);
-    const [socket] = useState(io(apiUrl));
+    const [socket] = useState(io.connect(apiUrl,{transports: ['websocket']}));
     const { dispatch } = useContext(Context);
     const { provider, onSuccess, className, children } = props;
         
     useEffect(() => {
+        console.log("SOCKET REGISTRATION");
         socket.on(provider, obj => {
             setPopupOpened(false);
             if (obj.err){
