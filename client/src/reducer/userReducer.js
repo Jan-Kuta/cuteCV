@@ -7,13 +7,21 @@ export default (state, action) => {
                 ...state,
                 user: action.payload
             };
-            break;
         case userActions.LOGOUT_USER: 
             return {
                 ...state,
                 user: null
             };
-            break;
+        case userActions.SHOW_USER_ERROR:
+            return {
+                ...state,
+                userErrorMessage: action.payload
+            };
+        case userActions.HIDE_USER_ERROR:
+            return {
+                ...state,
+                userErrorMessage: null
+            }
         default:
             return state;
     }

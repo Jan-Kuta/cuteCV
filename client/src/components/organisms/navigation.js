@@ -7,6 +7,7 @@ import ForgotPasswordModal from './forgotPassword';
 import Context from '../../context/userContext';
 import { MeQuery } from '../../query/userQueries';
 import userActions from '../../actionType/userActions';
+
 const Navigation = (props) => {
     const getUserName = (user) => (
         user ? user.displayName : 'UNKNOWN'
@@ -16,17 +17,19 @@ const Navigation = (props) => {
     const [loginModalOpened, setLoginModalOpened] = useState(false);
     const [registerModalOpened, setRegisterModalOpened] = useState(false);
     const [forgotPasswordModalOpened, setForgotPasswordModalOpened] = useState(false);
+    const apiUrl = process.env.REACT_APP_API_URL;
+    const { socket } = props;
     const { state: { user }, dispatch } = useContext(Context);
     let isAuthenticated = !!user;
     let loggedUser = getUserName(user);
     
-    useEffect(()=>{
+    useEffect(() => {
         dispatch({type: userActions.LOGIN_USER, payload: data.me});
     }, [data.me && data.me._id]);
     
     const logout = async () => {
         dispatch({type: userActions.LOGOUT_USER, payload: null});
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/logout`, {
+        const res = await fetch(`${apiUrl}/logout`, {
             method: 'GET',
             credentials: 'include'
         });
@@ -72,10 +75,11 @@ const Navigation = (props) => {
                     setRegisterModalOpened(false);
                     setForgotPasswordModalOpened(false);
                 }}
+                socket={socket}
+                apiUrl={apiUrl}
             />
             <RegisterModal
                 onClose={() => setRegisterModalOpened(false)}
-                onSubmit={() => alert("OK")}
                 onLoginClick={() => {
                     setLoginModalOpened(true);
                     setRegisterModalOpened(false);
@@ -86,10 +90,11 @@ const Navigation = (props) => {
                     setRegisterModalOpened(false);
                     setForgotPasswordModalOpened(false);
                 }}
+                socket={socket}
+                apiUrl={apiUrl}
             />
             <ForgotPasswordModal
                 onClose={() => setForgotPasswordModalOpened(false)}
-                onSubmit={() => alert("OK")}
                 onRegisterClick={() => {
                     setForgotPasswordModalOpened(false);
                     setRegisterModalOpened(true);

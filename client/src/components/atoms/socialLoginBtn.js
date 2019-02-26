@@ -2,23 +2,20 @@ import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Context from '../../context/userContext';
 import userActions from '../../actionType/userActions';
-import io from 'socket.io-client';
 
 const SocialLoginButton = (props) => {
     const [disabled, setDisabled] = useState('');
     const [popupOpened, setPopupOpened] = useState(false);
     const [popup, setPopup] = useState(null);
-    const [apiUrl] = useState(process.env.REACT_APP_API_URL);
-    const [socket] = useState(io.connect(apiUrl,{transports: ['websocket']}));
     const { dispatch } = useContext(Context);
-    const { provider, onSuccess, className, children } = props;
+    const { provider, onSuccess, className, children, socket, apiUrl } = props;
         
     useEffect(() => {
         console.log("SOCKET REGISTRATION");
         socket.on(provider, obj => {
             setPopupOpened(false);
             if (obj.err){
-                alert(JSON.stringify(obj.err));
+                dispatch({type: userActions.SHOW_USER_ERROR, payload: obj.err});
                 return;
             }
             dispatch({type: userActions.LOGIN_USER, payload: obj.user});
