@@ -123,17 +123,17 @@ module.exports = () => {
         return done(new Error('Unable to login'), null, 'Unable to login');
       }
 
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return done(new Error('Unable to login'), null,'Unable to login');
+      }
+      
       if (!user.confirmed){
         return done(new Error('Confirm your email to login'), null, 'Confirm your email to login');
       }
 
       if (user.blocked) {
         return done(new Error('Your account is blocked'), null, 'Your account is blocked');
-      }
-
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-        return done(new Error('Unable to login'), null,'Unable to login');
       }
     
       return done(null, userSerialize(user));
