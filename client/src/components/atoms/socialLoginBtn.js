@@ -14,9 +14,13 @@ const SocialLoginButton = (props) => {
     const { provider, onSuccess, className, children } = props;
         
     useEffect(() => {
-        socket.on(provider, user => {
+        socket.on(provider, obj => {
             setPopupOpened(false);
-            dispatch({type: userActions.LOGIN_USER, payload: user});
+            if (obj.err){
+                alert(JSON.stringify(obj.err));
+                return;
+            }
+            dispatch({type: userActions.LOGIN_USER, payload: obj.user});
             onSuccess();
         });
     }, []);

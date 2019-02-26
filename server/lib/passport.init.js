@@ -32,6 +32,7 @@ module.exports = () => {
       if (dbUser) {
         if (dbUser.blocked) {
           return cb(new Error("User Account Blocked"), null);
+          // return cb(null, false, {message: 'User Account Blocked'})
         }
         
         if (!dbUser[`${user.provider}Provider`]) {
@@ -169,8 +170,7 @@ module.exports = () => {
           data: {
             password: hashedPassword,
             localProvider: true,
-            confirmed: true, // TODO JKU - overit email
-            blocked: false
+            confirmed: true // TODO JKU - overit email
           },
           where: {
             _id: user._id
