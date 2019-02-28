@@ -1,5 +1,6 @@
-exports.controller = (req, res, provider, user, err) => {
+exports.controller = (req, res, provider) => {
   const io = req.app.get('io') 
-  io.in(req.session.socketId).emit(provider, {err: err ? err.message : null, user: user})
+  console.log('REQ', req)
+  io.in(req.session.socketId).emit(provider, {err: err ? err.message : null, user: req.user})
   res.end()
 }

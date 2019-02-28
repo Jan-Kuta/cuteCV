@@ -4,28 +4,26 @@ const passport = require('passport')
 const authController = require('./auth.controller')
 
 // Setting up the passport middleware for each of the OAuth providers
-const twitterAuth = (req,res) => (
+const twitterAuth = (req,res, next) => (
   passport.authenticate(
     'twitter',
-    { scope: ['include_email=true']},
-    (err,user) => authController.controller(req, res, 'twitter', user, err)
-  )(req, res)
+    { scope: ['include_email=true']}
+  )(req, res, next)
 )
 
-const googleAuth = (req, res) => (
+const googleAuth = (req, res, next) => (
   passport.authenticate(
     'google',
-    { scope: ['profile', 'email'] },
-    (err, user) => authController.controller(req, res, 'google', user, err)
-  )(req, res)
+    { scope: ['profile', 'email'] }
+  )(req, res, next)
 )
 
-const facebookAuth = (req, res) => (
+const facebookAuth = (req, res, next) => (
   passport.authenticate(
-    'facebook',
+    'facebook'/*,
     null,
-    (err, user) => authController.controller(req, res, 'facebook', user, err)
-  )(req, res)
+    (err, user) => authController.controller(req, res, 'facebook', user, err)*/
+  )(req, res, next)
 )
 
 const localAuth = (req, res, strategy) => (passport.authenticate(
@@ -60,7 +58,7 @@ const localAuth = (req, res, strategy) => (passport.authenticate(
 
 // Routes that are triggered by the callbacks from each OAuth provider once 
 // the user has authenticated successfully
-router.get('/twitter/callback', twitterAuth)//, (req, res) => authController.controller(req, res, 'twitter'))
+router.get('/twitter/callback', twitterAuth, (req, res) => authController.controller(req, res, 'twitter'))
 router.get('/google/callback', googleAuth, (req,res) => authController.controller(req, res, 'google'))
 router.get('/facebook/callback', facebookAuth, (req,res) => authController.controller(req, res, 'facebook'))
 
