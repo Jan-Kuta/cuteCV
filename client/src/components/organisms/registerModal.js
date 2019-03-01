@@ -3,9 +3,9 @@ import Modal from '../atoms/modal';
 import FacebookLoginButton from '../atoms/facebookLoginBtn';
 import TwitterLoginButton from '../atoms/twitterLoginBtn';
 import GoogleLoginButton from '../atoms/googleLoginBtn';
-import Alert from '../atoms/alert';
-import Context from '../../context/userContext';
-import userActions from '../../actionType/userActions';
+import SnackbarContext from '../../context/snackbarContext';
+import SnackbarActions from '../../actionType/snackbarActions';
+import snackbarActions from '../../actionType/snackbarActions';
 
 
 const RegisterModal = (props) => {
@@ -14,7 +14,14 @@ const RegisterModal = (props) => {
     const [password, setPassword] = useState('');
     const [confirmedPassword, setConfirmedPassword] = useState('');
     const [username, setUsername] = useState('');
-    const { state: { userErrorMessage }, dispatch } = useContext(Context);
+    const { dispatch: snackbarDispatch } = useContext(SnackbarContext);
+
+    const resetForm = () => {
+        setEmail("");
+        setPassword("");
+        setConfirmedPassword("");
+        setUsername("");
+    }
 
     const handleChangeEmail = (e) => {
         setEmail(e.target.value);
@@ -36,7 +43,13 @@ const RegisterModal = (props) => {
         e.preventDefault();
         try{
             if (password !== confirmedPassword) {
-                dispatch({type: userActions.SHOW_USER_ERROR, payload: 'Passwords do not match'});
+                snackbarDispatch({
+                    type: SnackbarActions.SNACKBAR_SHOULD_SHOW,
+                    payload: {
+                        text: 'Passwords do not match',
+                        color: 'red'
+                    }
+                });
                 return
             }
 
@@ -51,13 +64,32 @@ const RegisterModal = (props) => {
             });
             if (!res.ok){
                 res = await res.json();
-                dispatch({type: userActions.SHOW_USER_ERROR, payload: res.message});
+                snackbarDispatch({
+                    type: snackbarActions.SNACKBAR_SHOULD_SHOW,
+                    payload: {
+                        text: res.message,
+                        color: 'red'
+                    }
+                });
                 return;
             }
-            alert('Registration completed, check your e-mail.')
+            snackbarDispatch({
+                type: SnackbarActions.SNACKBAR_SHOULD_SHOW,
+                payload: {
+                    text: 'Registration completed, check your e-mail.',
+                    color: 'green'
+                }
+            });
+            resetForm();
             onSuccess();
         } catch (err) {
-            dispatch({type: userActions.SHOW_USER_ERROR, payload: 'Problem with server'});
+            snackbarDispatch({
+                type: snackbarActions.SNACKBAR_SHOULD_SHOW,
+                payload: {
+                    text: 'Problem with server',
+                    color: 'red'
+                }    
+            });
         }
     }    
 
@@ -75,11 +107,6 @@ const RegisterModal = (props) => {
         >
             <form onSubmit={onSubmit}>
                 <h2>Register</h2>
-                {userErrorMessage && (
-                    <Alert onClose={() => dispatch({type: userActions.HIDE_USER_ERROR})}>
-                        <p>{userErrorMessage}</p>
-                    </Alert>
-                )}
                 <div className="w3-row">
                     <div className="w3-col s12">
                         <input className="w3-input w3-round w3-border-0 w3-section" type="email" name="email" placeholder="E-mail" value={email} onChange={handleChangeEmail} required />

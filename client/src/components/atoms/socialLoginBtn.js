@@ -1,13 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Context from '../../context/userContext';
+import snackbarContext from '../../context/snackbarContext';
+import snackbarActions from '../../actionType/snackbarActions';
+import userContext from '../../context/userContext';
 import userActions from '../../actionType/userActions';
 
 const SocialLoginButton = (props) => {
     const [disabled, setDisabled] = useState('');
     const [popupOpened, setPopupOpened] = useState(false);
     const [popup, setPopup] = useState(null);
-    const { dispatch } = useContext(Context);
+    const { dispatch: snackbarDispatch } = useContext(snackbarContext);
+    const { dispatch: userDispatch} = useContext(userContext);
     const { provider, onSuccess, className, children, socket, apiUrl } = props;
         
     useEffect(() => {
@@ -15,10 +18,16 @@ const SocialLoginButton = (props) => {
         socket.on(provider, obj => {
             setPopupOpened(false);
             if (obj.err){
-                dispatch({type: userActions.SHOW_USER_ERROR, payload: obj.err});
+                snackbarDispatch({
+                    type: snackbarActions.SNACKBAR_SHOULD_SHOW,
+                    payload: {
+                        text: obj.err,
+                        color: 'red'
+                    }
+                });
                 return;
             }
-            dispatch({type: userActions.LOGIN_USER, payload: obj.user});
+            userDispatch({type: userActions.LOGIN_USER, payload: obj.user});
             onSuccess();
         });
     }, []);

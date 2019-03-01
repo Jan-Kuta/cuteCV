@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Context from '../../context/userContext';
 
-const WelcomePage = (props) => {
+const WelcomePage = () => {
     const { state: { user } } = useContext(Context);
     
     return (

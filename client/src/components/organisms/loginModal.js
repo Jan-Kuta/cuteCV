@@ -3,15 +3,22 @@ import Modal from '../atoms/modal';
 import FacebookLoginButton from '../atoms/facebookLoginBtn';
 import TwitterLoginButton from '../atoms/twitterLoginBtn';
 import GoogleLoginButton from '../atoms/googleLoginBtn';
-import Alert from '../atoms/alert';
-import Context from '../../context/userContext';
+import UserContext from '../../context/userContext';
 import userActions from '../../actionType/userActions';
+import SnackbarContext from '../../context/snackbarContext';
+import snackbarActions from '../../actionType/snackbarActions';
 
 const LoginModal = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { state: { userErrorMessage }, dispatch } = useContext(Context);
+    const { dispatch: userDispatch } = useContext(UserContext);
+    const { dispatch: snackbarDispatch} = useContext(SnackbarContext);
     const { onClose, opened, onRegisterClick, onForgotPasswordClick, onSuccess, socket, apiUrl } = props;
+    
+    const resetForm = () => {
+        setEmail("");
+        setPassword("");
+    }
 
     const handleChangeEmail = (e) => {
         setEmail(e.target.value);
@@ -36,15 +43,28 @@ const LoginModal = (props) => {
             });
             if (!res.ok){
                 res = await res.json();
-                dispatch({type: userActions.SHOW_USER_ERROR, payload: res.message});
+                snackbarDispatch({
+                    type: snackbarActions.SNACKBAR_SHOULD_SHOW,
+                    payload: {
+                        text: res.message,
+                        color: 'red'
+                    }
+                });
                 return;
             }
             res = await res.json();
             console.log("user: ", res);
-            dispatch({type: userActions.LOGIN_USER, payload: res});
+            userDispatch({type: userActions.LOGIN_USER, payload: res});
+            resetForm();
             onSuccess();
         } catch (err) {
-            dispatch({type: userActions.SHOW_USER_ERROR, payload: 'Problem with server'});
+            snackbarDispatch({
+                type: snackbarActions.SNACKBAR_SHOULD_SHOW,
+                payload: {
+                    text: 'Problem with server',
+                    color: 'red'
+                }
+            });
         }
     }    
 
@@ -65,11 +85,6 @@ const LoginModal = (props) => {
         >
             <form onSubmit={onSubmit}>
                 <h2>Login</h2>
-                {userErrorMessage && (
-                    <Alert onClose={() => dispatch({type: userActions.HIDE_USER_ERROR})}>
-                        <p>{userErrorMessage}</p>
-                    </Alert>
-                )}
                 <div className="w3-row">
                     <div className="w3-col m5 s12">
                         <FacebookLoginButton onSuccess={onSuccess} socket={socket} apiUrl={apiUrl} />

@@ -1,0 +1,3 @@
+export default {
+    SNACKBAR_SHOULD_SHOW: 'SNACKBAR_SHOULD_SHOW'
+};

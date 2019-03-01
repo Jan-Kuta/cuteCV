@@ -22,3 +22,22 @@
     border-radius: 50%;
     padding: 8px 10px;
   }
+
+  .w3-relative {
+    position: relative!important;
+  }
+
+  .w3-absolute {
+    position: absolute!important;
+  }
+
+  .w3-w100 {
+    width: 100%;
+  }
+
+  .w3-snackbar {
+    position: absolute;
+    margin: 0;
+    width: 100%;
+    z-index: 111;
+  }

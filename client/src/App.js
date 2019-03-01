@@ -5,9 +5,12 @@ import ApolloClient from "apollo-client";
 import { HttpLink, InMemoryCache } from 'apollo-client-preset';
 import io from 'socket.io-client';
 import Navigation from './components/organisms/navigation';
+import Snackbar from './components/atoms/snackbar'
 import WelcomePage from './components/pages/welcome';
 import UserContext from './context/userContext';
-import reducer from './reducer/userReducer';
+import UserReducer from './reducer/userReducer';
+import SnackbarContext from './context/snackbarContext';
+import SnackbarReducer from './reducer/snackbarReducer';
 
 const client = new ApolloClient({
   link: new HttpLink({uri: 'http://climbers4climbers.com:8080/graphql', credentials: 'include'}),
@@ -17,19 +20,24 @@ const client = new ApolloClient({
 const socket = io.connect(process.env.REACT_APP_API_URL, {transports: ['websocket']})
 
 const App = () => {
-  const initialState = useContext(UserContext);
-  const [state, dispatch] = useReducer(reducer, initialState); 
+  const initialUserState = useContext(UserContext);
+  const [userState, userDispatch] = useReducer(UserReducer, initialUserState);
+
+  const initialSnackbarState = useContext(SnackbarContext);
+  const [snackbarSate, snackbarDispatch] = useReducer(SnackbarReducer, initialSnackbarState); 
   
-  console.log({state});
   return (
     <ApolloProvider client={client}>
       <Router>
-        <UserContext.Provider value={{state, dispatch}}>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Navigation  socket={socket}/>
-            <div className="nav-filler"></div>
-            <Route exact path="/" component={WelcomePage} />
-          </Suspense>
+        <UserContext.Provider value={{state: userState, dispatch: userDispatch}}>
+          <SnackbarContext.Provider value={{state: snackbarSate, dispatch: snackbarDispatch}}>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Snackbar />
+              <Navigation  socket={socket}/>
+              <div className="nav-filler"></div>
+              <Route exact path="/" component={WelcomePage} />
+            </Suspense>
+          </SnackbarContext.Provider>
         </UserContext.Provider>
       </Router>
     </ApolloProvider>

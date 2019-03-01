@@ -28,12 +28,15 @@ const Navigation = (props) => {
     }, [data.me && data.me._id]);
     
     const logout = async () => {
-        dispatch({type: userActions.LOGOUT_USER, payload: null});
-        const res = await fetch(`${apiUrl}/logout`, {
+        fetch(`${apiUrl}/logout`, {
             method: 'GET',
             credentials: 'include'
+        })
+        .then((res) => {
+            console.log('logout', res);
+            dispatch({type: userActions.LOGOUT_USER});
         });
-        console.log('logout', res);
+        
     };
 
     return (
@@ -58,7 +61,7 @@ const Navigation = (props) => {
                     </div>
                 </nav>
             </div>
-            <div className="nav-filler" />
+            {/*<div className="nav-filler" />*/}
             <LoginModal
                 onClose={() => setLoginModalOpened(false)}
                 onRegisterClick={() => {
