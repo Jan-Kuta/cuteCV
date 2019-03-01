@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useReducer, Suspense } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ApolloProvider } from 'react-apollo-hooks';
 import ApolloClient from "apollo-client";
@@ -25,11 +25,11 @@ const App = () => {
     <ApolloProvider client={client}>
       <Router>
         <UserContext.Provider value={{state, dispatch}}>
-          <div>
+          <Suspense fallback={<div>Loading...</div>}>
             <Navigation  socket={socket}/>
             <div className="nav-filler"></div>
             <Route exact path="/" component={WelcomePage} />
-          </div>
+          </Suspense>
         </UserContext.Provider>
       </Router>
     </ApolloProvider>

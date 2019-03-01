@@ -13,7 +13,7 @@ const Navigation = (props) => {
         user ? user.displayName : 'UNKNOWN'
     );
 
-    const { data } = useQuery(MeQuery);
+    const { data } = useQuery(MeQuery, { suspend: true });
     const [loginModalOpened, setLoginModalOpened] = useState(false);
     const [registerModalOpened, setRegisterModalOpened] = useState(false);
     const [forgotPasswordModalOpened, setForgotPasswordModalOpened] = useState(false);
