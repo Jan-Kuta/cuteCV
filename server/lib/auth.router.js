@@ -7,22 +7,26 @@ const authController = require('./auth.controller')
 const twitterAuth = (req,res, next) => (
   passport.authenticate(
     'twitter',
-    { scope: ['include_email=true']}
+    { scope: ['include_email=true']},
+    (err, user) => authController.controller(req, res, 'twitter', user, err)
   )(req, res, next)
 )
 
 const googleAuth = (req, res, next) => (
   passport.authenticate(
     'google',
-    { scope: ['profile', 'email'] }
+    { scope: ['profile', 'email'] },
+    (err, user) => (
+      authController.controller(req, res, 'google', user, err)
+    )
   )(req, res, next)
 )
 
 const facebookAuth = (req, res, next) => (
   passport.authenticate(
-    'facebook'/*,
+    'facebook',
     null,
-    (err, user) => authController.controller(req, res, 'facebook', user, err)*/
+    (err, user) => authController.controller(req, res, 'facebook', user, err)
   )(req, res, next)
 )
 
@@ -58,9 +62,9 @@ const localAuth = (req, res, strategy) => (passport.authenticate(
 
 // Routes that are triggered by the callbacks from each OAuth provider once 
 // the user has authenticated successfully
-router.get('/twitter/callback', twitterAuth, (req, res) => authController.controller(req, res, 'twitter'))
-router.get('/google/callback', googleAuth, (req,res) => authController.controller(req, res, 'google'))
-router.get('/facebook/callback', facebookAuth, (req,res) => authController.controller(req, res, 'facebook'))
+router.get('/twitter/callback', twitterAuth)
+router.get('/google/callback', googleAuth)
+router.get('/facebook/callback', facebookAuth)
 
 // This custom middleware allows us to attach the socket id to the session
 // With that socket id we can send back the right user info to the right 

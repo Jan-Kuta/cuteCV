@@ -32,7 +32,6 @@ module.exports = () => {
       if (dbUser) {
         if (dbUser.blocked) {
           return cb(new Error("User Account Blocked"), null);
-          // return cb(null, false, {message: 'User Account Blocked'})
         }
         
         if (!dbUser[`${user.provider}Provider`]) {
