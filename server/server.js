@@ -1,9 +1,5 @@
 require('dotenv').config()
 const express = require('express')
-const path = require('path')
-const fs = require('fs')
-const https = require('https')
-const http = require('http')
 const passport = require('passport')
 const session = require('express-session')
 const cors = require('cors')
@@ -11,9 +7,10 @@ const socketio = require('socket.io')
 const bodyParser = require('body-parser')
 const authRouter = require('./lib/auth.router')
 const passportInit = require('./lib/passport.init')
+const emailController = require('./email/email.controller')
 const { CLIENT_ORIGIN } = require('./config')
 const app = express()
-const { schema } = require('./schema/schema');
+const { schema } = require('./schema/schema')
 
 // Accept requests from our client
 app.use(cors({
@@ -50,6 +47,12 @@ app.get('/logout', (req, res) => {
   req.logout();
   return res.json({ message: 'Logged out succesfully' });
 })
+
+// sends confirmation email
+app.post('/email', emailController.collectEmail)
+
+// email confirmation
+app.get('/email/confirm/:uuid', emailController.confirmEmail)
 
 schema.applyMiddleware({app, cors: {origin: CLIENT_ORIGIN}})
 

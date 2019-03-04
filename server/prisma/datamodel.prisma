@@ -3,6 +3,8 @@ type User {
   username: String @unique
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String @unique
+  resetPasswordUuid: String @unique
   blocked: Boolean
   displayName: String
   password: String

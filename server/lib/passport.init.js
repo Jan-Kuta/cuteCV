@@ -10,6 +10,8 @@ const {
 const prisma = require('../prisma')
 const hashPassword = require('../utils/hashPassword')
 const userSerialize = require('../utils/userSerialize')
+const sendMail = require('../email/email.send')
+const templates = require('../email/email.templates')
 
 module.exports = () => {  
 
@@ -119,20 +121,21 @@ module.exports = () => {
         }
       });
       if (!user || !user.localProvider) {
-        return done(new Error('Unable to login'), null, 'Unable to login');
+        return done(new Error('Unable to login'), null);
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return done(new Error('Unable to login'), null,'Unable to login');
+        return done(new Error('Unable to login'), null);
       }
       
       if (!user.confirmed){
-        return done(new Error('Confirm your email to login'), null, 'Confirm your email to login');
+        await sendMail(user.username, templates.confirm(user.verificationUuid))
+        return done(new Error('Confirm your email to login, confirmation email was sent again to your e-mail account'), null);
       }
 
       if (user.blocked) {
-        return done(new Error('Your account is blocked'), null, 'Your account is blocked');
+        return done(new Error('Your account is blocked'), null);
       }
     
       return done(null, userSerialize(user));
@@ -162,6 +165,7 @@ module.exports = () => {
       // Do the registration
       const hashedPassword = await hashPassword(password);
       let result = null;
+      const uuid = require('uuid/v4')();
 
       // Already registered but wit other provider
       if (user) {
@@ -169,7 +173,8 @@ module.exports = () => {
           data: {
             password: hashedPassword,
             localProvider: true,
-            confirmed: true // TODO JKU - overit email
+            confirmed: false,
+            verificationUuid: uuid
           },
           where: {
             _id: user._id
@@ -184,10 +189,16 @@ module.exports = () => {
             displayName: username,
             password: hashedPassword,
             localProvider: true,
-            confirmed: true, // TODO JKU - overit email
+            confirmed: false,
+            verificationUuid: uuid,
             blocked: false
           }
         });
+      }
+
+      // Send verification e-mail
+      if (result) {
+        sendMail(result.username, templates.confirm(result.verificationUuid));
       }
 
       return done(null, userSerialize(result));

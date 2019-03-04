@@ -21,6 +21,7 @@
     "graphql-import": "^0.7.1",
     "graphql-tools": "^4.0.4",
     "https": "^1.0.0",
+    "nodemailer": "^5.1.1",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-google-oauth": "^1.0.0",
@@ -30,7 +31,8 @@
     "prisma-binding": "^2.3.2",
     "request": "^2.86.0",
     "request-promise": "^4.2.2",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.1.1",
+    "uuid": "^3.3.2"
   },
   "author": "funador",
   "license": "MIT",

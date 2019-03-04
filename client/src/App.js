@@ -1,5 +1,5 @@
 import React, { useContext, useReducer, Suspense } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ApolloProvider } from 'react-apollo-hooks';
 import ApolloClient from "apollo-client";
 import { HttpLink, InMemoryCache } from 'apollo-client-preset';
@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 import Navigation from './components/organisms/navigation';
 import Snackbar from './components/atoms/snackbar'
 import WelcomePage from './components/pages/welcome';
+import ConfirmPage from './components/pages/confirm';
 import UserContext from './context/userContext';
 import UserReducer from './reducer/userReducer';
 import SnackbarContext from './context/snackbarContext';
@@ -35,7 +36,10 @@ const App = () => {
               <Snackbar />
               <Navigation  socket={socket}/>
               <div className="nav-filler"></div>
-              <Route exact path="/" component={WelcomePage} />
+              <Switch>
+                <Route exact path="/" component={WelcomePage} />
+                <Route exact path='/confirm/:uuid' component={ConfirmPage} />
+                </Switch>
             </Suspense>
           </SnackbarContext.Provider>
         </UserContext.Provider>

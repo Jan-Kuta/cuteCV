@@ -1,5 +1,5 @@
 # source: http://localhost:4467
-# timestamp: Mon Feb 25 2019 04:22:32 GMT+0100 (Central European Standard Time)
+# timestamp: Mon Mar 04 2019 21:05:54 GMT+0100 (Central European Standard Time)
 
 type AggregateEducation {
   count: Int!
@@ -1433,6 +1433,8 @@ type User {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -1460,6 +1462,8 @@ input UserCreateInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -1497,6 +1501,8 @@ input UserCreateWithoutJobsInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -1513,6 +1519,8 @@ input UserCreateWithoutSchoolsInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -1529,6 +1537,8 @@ input UserCreateWithoutSkillsInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -1545,6 +1555,8 @@ input UserCreateWithoutUserInfoInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -2217,6 +2229,10 @@ enum UserOrderByInput {
   photoUrl_DESC
   confirmed_ASC
   confirmed_DESC
+  verificationUuid_ASC
+  verificationUuid_DESC
+  resetPasswordUuid_ASC
+  resetPasswordUuid_DESC
   blocked_ASC
   blocked_DESC
   displayName_ASC
@@ -2238,6 +2254,8 @@ type UserPreviousValues {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -2284,6 +2302,8 @@ input UserUpdateInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -2301,6 +2321,8 @@ input UserUpdateManyMutationInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -2350,6 +2372,8 @@ input UserUpdateWithoutJobsDataInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -2366,6 +2390,8 @@ input UserUpdateWithoutSchoolsDataInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -2382,6 +2408,8 @@ input UserUpdateWithoutSkillsDataInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -2398,6 +2426,8 @@ input UserUpdateWithoutUserInfoDataInput {
   username: String
   photoUrl: String
   confirmed: Boolean
+  verificationUuid: String
+  resetPasswordUuid: String
   blocked: Boolean
   displayName: String
   password: String
@@ -2557,6 +2587,86 @@ input UserWhereInput {
 
   """All values that are not equal to given value."""
   confirmed_not: Boolean
+  verificationUuid: String
+
+  """All values that are not equal to given value."""
+  verificationUuid_not: String
+
+  """All values that are contained in given list."""
+  verificationUuid_in: [String!]
+
+  """All values that are not contained in given list."""
+  verificationUuid_not_in: [String!]
+
+  """All values less than the given value."""
+  verificationUuid_lt: String
+
+  """All values less than or equal the given value."""
+  verificationUuid_lte: String
+
+  """All values greater than the given value."""
+  verificationUuid_gt: String
+
+  """All values greater than or equal the given value."""
+  verificationUuid_gte: String
+
+  """All values containing the given string."""
+  verificationUuid_contains: String
+
+  """All values not containing the given string."""
+  verificationUuid_not_contains: String
+
+  """All values starting with the given string."""
+  verificationUuid_starts_with: String
+
+  """All values not starting with the given string."""
+  verificationUuid_not_starts_with: String
+
+  """All values ending with the given string."""
+  verificationUuid_ends_with: String
+
+  """All values not ending with the given string."""
+  verificationUuid_not_ends_with: String
+  resetPasswordUuid: String
+
+  """All values that are not equal to given value."""
+  resetPasswordUuid_not: String
+
+  """All values that are contained in given list."""
+  resetPasswordUuid_in: [String!]
+
+  """All values that are not contained in given list."""
+  resetPasswordUuid_not_in: [String!]
+
+  """All values less than the given value."""
+  resetPasswordUuid_lt: String
+
+  """All values less than or equal the given value."""
+  resetPasswordUuid_lte: String
+
+  """All values greater than the given value."""
+  resetPasswordUuid_gt: String
+
+  """All values greater than or equal the given value."""
+  resetPasswordUuid_gte: String
+
+  """All values containing the given string."""
+  resetPasswordUuid_contains: String
+
+  """All values not containing the given string."""
+  resetPasswordUuid_not_contains: String
+
+  """All values starting with the given string."""
+  resetPasswordUuid_starts_with: String
+
+  """All values not starting with the given string."""
+  resetPasswordUuid_not_starts_with: String
+
+  """All values ending with the given string."""
+  resetPasswordUuid_ends_with: String
+
+  """All values not ending with the given string."""
+  resetPasswordUuid_not_ends_with: String
   blocked: Boolean
 
   """All values that are not equal to given value."""
@@ -2666,6 +2776,8 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   _id: ID
   username: String
+  verificationUuid: String
+  resetPasswordUuid: String
 }
 
 type Work {
