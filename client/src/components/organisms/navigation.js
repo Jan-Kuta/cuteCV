@@ -106,6 +106,11 @@ const Navigation = (props) => {
                     setLoginModalOpened(true);
                     setForgotPasswordModalOpened(false);
                 }}
+                onSuccess={() => {
+                    setLoginModalOpened(false);
+                    setRegisterModalOpened(false);
+                    setForgotPasswordModalOpened(false);
+                }}
                 opened={forgotPasswordModalOpened}
             />
         </React.Fragment>

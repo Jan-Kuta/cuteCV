@@ -8,6 +8,7 @@ import Navigation from './components/organisms/navigation';
 import Snackbar from './components/atoms/snackbar'
 import WelcomePage from './components/pages/welcome';
 import ConfirmPage from './components/pages/confirm';
+import ResetPasswordPage from './components/pages/resetPassword';
 import UserContext from './context/userContext';
 import UserReducer from './reducer/userReducer';
 import SnackbarContext from './context/snackbarContext';
@@ -39,6 +40,7 @@ const App = () => {
               <Switch>
                 <Route exact path="/" component={WelcomePage} />
                 <Route exact path='/confirm/:uuid' component={ConfirmPage} />
+                <Route exact path='/resetPassword/:uuid' component={ResetPasswordPage} />
                 </Switch>
             </Suspense>
           </SnackbarContext.Provider>

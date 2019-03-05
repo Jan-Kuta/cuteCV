@@ -4,7 +4,7 @@ const msgs = require('./email.msgs');
 const templates = require('./email.templates');
 
 // The callback that is invoked when the user submits the form on the client.
-exports.collectEmail = async (req, res) => {
+exports.forgotPassword = async (req, res) => {
     const { email } = req.body
     
     const dbUser = await prisma.query.user({
@@ -13,18 +13,27 @@ exports.collectEmail = async (req, res) => {
         }
     })
     
-    if (!dbUser) {
+    if (!dbUser || !dbUser.localProvider) {
         return res.json({msg: msgs.problemOccured})
     }
-    
-    if (dbUser && !dbUser.confirmed) {
-        sendMail(dbUser.username, templates.confirm(dbUser.verificationUuid))
-        .then(() => res.json({ msg: msgs.resend }))
-    }
 
-    // The user has already confirmed this email address
+    const uuid = require('uuid/v4')();
+
+    const result = await prisma.mutation.updateUser({
+        where: {
+            username: email
+        },
+        data: {
+            resetPasswordUuid: uuid // todo jku - omezena platnost
+        }
+    })
+
+    if (result) {
+        sendMail(result.username, templates.resetPassword(result.resetPasswordUuid))
+        .then(() => res.json({ msg: msgs.confirm }))
+    }
     else {
-        res.json({ msg: msgs.alreadyConfirmed })
+        res.json({ msg: msgs.problemOccured })
     }
 }
 

@@ -13,6 +13,15 @@ module.exports = {
         </a>
         `,      
         text: `Copy and paste this link: ${process.env.CLIENT_URL}/confirm/${uuid}`
+    }), 
+    resetPassword: uuid => ({
+        subject: 'Reset password',
+        html: `
+        <a href='${process.env.CLIENT_URL}/resetPassword/${uuid}'>
+            click to reset password
+        </a>
+        `,
+        text: `Copy and paste this link: ${process.env.CLIENT_URL}/resetPassword/${uuid} to reset a password`
     })
     
 }

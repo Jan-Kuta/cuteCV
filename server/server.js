@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const authRouter = require('./lib/auth.router')
 const passportInit = require('./lib/passport.init')
 const emailController = require('./email/email.controller')
+const resetPasswordController = require('./lib/resetPassword.controller')
 const { CLIENT_ORIGIN } = require('./config')
 const app = express()
 const { schema } = require('./schema/schema')
@@ -49,10 +50,12 @@ app.get('/logout', (req, res) => {
 })
 
 // sends confirmation email
-app.post('/email', emailController.collectEmail)
+app.post('/forgot-password', emailController.forgotPassword)
 
 // email confirmation
 app.get('/email/confirm/:uuid', emailController.confirmEmail)
+
+app.post('/reset-password', resetPasswordController.controller)
 
 schema.applyMiddleware({app, cors: {origin: CLIENT_ORIGIN}})
 
