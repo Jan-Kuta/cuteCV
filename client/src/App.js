@@ -15,7 +15,7 @@ import SnackbarContext from './context/snackbarContext';
 import SnackbarReducer from './reducer/snackbarReducer';
 
 const client = new ApolloClient({
-  link: new HttpLink({uri: 'http://climbers4climbers.com:8080/graphql', credentials: 'include'}),
+  link: new HttpLink({uri:  `${process.env.REACT_APP_API_URL}/graphql`, credentials: 'include'}),
   cache: new InMemoryCache()
 });
 
